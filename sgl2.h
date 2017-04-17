@@ -34,30 +34,60 @@ class Window {
     SDL_Window* window_;
     SDL_Renderer* renderer_;
     Color background_color_;
+    bool invalid_;  // calling this invalid to match up with what most graphics
+                    // libraries call it
 
    public:
-    /** Basic window constructor.
-        *
-        *   Creates a basic window with title, dimensions.
-        */
-    Window(const string& title, int width, int height);
-
-    /**
+    /** Basic Window constructor.
+    *   Creates a basic window with title, dimensions, and background color.
     *
     */
     Window(const string& title, int width, int height, const Color& background);
 
-    /** Main loop.
-        *
-        *   Runs the main loop, which handles rendering, events, etc.
-        */
-    void Run();
+    /** Basic Window constructor.
+    *	Creates a basic window with title, origin, dimensions, and background
+    *color.
+    *
+    */
+    Window(const string& title, int x, int y, int width, int height,
+           const Color& background);
+
+    void SetColor(const Color& color);
 
     /**	Key press event handler.
-        *
-        *	Override this to handle key presses.
-        */
+    *	Override this to handle key presses.
+    */
     virtual void KeyPressed(KeyboardEvent& key);
+
+    virtual void PrePaint();
+
+    virtual void Paint() = 0;
+
+    virtual void PostPaint();
+
+    void PaintAll();
+
+    void Repaint();
+
+    /** Main loop.
+    *	Runs the main loop, which handles rendering, events, etc.
+    */
+    void Run();
+};
+
+class GraphicsObject {
+   private:
+    /** Unique identifier for object */
+    static unsigned id;
+
+   protected:
+    ObjectWindow* window;
+
+}
+
+class ObjectWindow : public Window {
+   protected:
+    vector<GraphicsObject> objects_;
 };
 }
 

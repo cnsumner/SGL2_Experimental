@@ -11,13 +11,46 @@ Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a):
 	blue(b < 0 ? 0 : (b > 255) ? 255 : b),
 	alpha(a < 0 ? 0 : (a > 255) ? 255 : a){};
 
-Window::Window(const string& title, int width, int height)
-    : background_color_(Color(0, 0, 0, 0)) {
+
+//--------------BASE WINDOW CLASS-----------------------//
+//------------------------------------------------------//
+//------------------------------------------------------//
+//------------------------------------------------------//
+
+Window::Window(const string& title, int width, int height, const Color& background)
+    : background_color_(background) {
     if (SDL_Init(SDL_INIT_EVERYTHING)) return;
     if (SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_SHOWN, &window_,
                                     &renderer_))
         return;
     SDL_SetWindowTitle(window_, title.c_str());
+}
+
+void Window::SetColor(const Color& color)
+{
+    background_color_ = color;
+}
+
+void Window::PrePaint() {
+    SetColor(background_color_);
+    SDL_RenderClear(renderer_);
+}
+
+void Window::PostPaint() {
+    SDL_RenderPresent(renderer_);
+    invalid_ = false;
+}
+
+void Window::PaintAll()
+{
+    PrePaint();
+    Paint();
+    PostPaint();
+}
+
+void Window::Repaint()
+{
+    invalid_ = true;
 }
 
 void Window::Run() {
@@ -35,17 +68,26 @@ void Window::Run() {
             }
         }
 
-        // TODO: break drawing code into other methods
-        SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(renderer_);
-
-        SDL_SetRenderDrawColor(renderer_, 255, 255, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawPoint(renderer_, 1, 1);
-
-        SDL_RenderPresent(renderer_);
+        if (invalid_)
+        {
+            PaintAll();
+        }
     }
 }
 
 void Window::KeyPressed(KeyboardEvent& key) {}
+
+//------------------------------------------------------//
+//------------------------------------------------------//
+//------------------------------------------------------//
+
+
+//--------------OBJECT WINDOW CLASS-----------------------//
+//------------------------------------------------------//
+//------------------------------------------------------//
+//------------------------------------------------------//
+
+
+
 }
 #endif
