@@ -2,11 +2,13 @@
 #define SGL2_H
 
 #include <string>
+#include <vector>
 
 // TODO: change to SDL2/SDL.h
 #include <C:/SDL2-2.0.4/include/SDL.h>
 
 using std::string;
+using std::vector;
 
 namespace sgl2 {
 
@@ -69,26 +71,78 @@ class Window {
 
     void Repaint();
 
+    void DrawPoint(Color color, int x, int y);
+
+    void DrawRectangle(Color color, const SDL_Rect& rect);
+
     /** Main loop.
     *	Runs the main loop, which handles rendering, events, etc.
     */
     void Run();
 };
 
-class GraphicsObject {
-   private:
-    /** Unique identifier for object */
-    static unsigned id;
+/** forward declaration */
+class ObjectWindow;
 
+class GraphicalObject {
    protected:
-    ObjectWindow* window;
+    ObjectWindow* window_;
+    int posx_;
+    int posy_;
+    Color color_;
 
-}
+   public:
+    /** Unique identifier for object */
+    const unsigned id_;
+    GraphicalObject(ObjectWindow* window, Color color);
+    GraphicalObject(ObjectWindow* window, Color color, int x, int y);
+    virtual void Paint() = 0;
+    virtual int GetPosX();
+    virtual int GetPosY();
+    virtual void SetPosX(int x);
+    virtual void SetPosY(int y);
+
+   private:
+    static unsigned id_source_;
+};
+
+class Point : public GraphicalObject {
+   public:
+    Point(ObjectWindow* window, Color color, int x, int y);
+    void Paint();
+};
+
+class Rectangle : public GraphicalObject {
+   public:
+    Rectangle(ObjectWindow* window, Color color, int x, int y, int width,
+              int height);
+    void Paint();
+    int GetPosX();
+    int GetPosY();
+    void SetPosX(int x);
+    void SetPosY(int y);
+
+   private:
+    SDL_Rect rect_;
+
+};
 
 class ObjectWindow : public Window {
    protected:
-    vector<GraphicsObject> objects_;
+    vector<GraphicalObject*> objects_;
+
+   public:
+    ObjectWindow(const string& title, int width, int height,
+                 const Color& background);
+
+    void PrePaint() override;
+    void Paint() override;
+    void PostPaint() override;
+
+    void Add(GraphicalObject* obj);
 };
 }
+
+#undef main
 
 #endif

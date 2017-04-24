@@ -2,42 +2,21 @@
 
 using namespace sgl2;
 
-class MyWindow : public Window {
-public:
-	MyWindow(const string& title, int width, int height, const Color& background) : Window(title, width, height, background)
-	{
-		x = 1;
-		y = 1;
-	}
-
-private:
-	int x;
-	int y;
-
-	void Paint()
-	{
-		// TODO: break drawing code into other methods
-        SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(renderer_);
-
-        SDL_SetRenderDrawColor(renderer_, 255, 255, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawPoint(renderer_, x, 1);
-
-        SDL_RenderPresent(renderer_);
-	}
-
-	void KeyPressed(KeyboardEvent& key)
-	{
-		x++;
-		Repaint();
-	}
-
+class MyObjectWindow : public ObjectWindow {
+   public:
+    MyObjectWindow(const string& title, int width, int height,
+                   const Color& background)
+        : ObjectWindow(title, width, height, background) {}
 };
 
-int main(int argc, char *argv[]) {
-	MyWindow window = MyWindow("test", 800, 600, Color(0,0,0));
-	window.Repaint();
-	window.Run();
+int main() {
+    MyObjectWindow window = MyObjectWindow("test", 800, 600, Color(0, 0, 0));
+	Point p(&window, Color(255,0,0), 1, 1);
+    Rectangle r(&window, Color(255,255,255), 20, 20, 50, 50);
 
-	return 0;
+	window.Add(&p);
+    window.Add(&r);
+    window.Run();
+
+    return 0;
 }
