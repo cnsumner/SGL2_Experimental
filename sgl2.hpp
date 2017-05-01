@@ -260,7 +260,6 @@ namespace sgl2 {
 		return false;
 	}
 
-	//TODO: add docs
 	bool GraphicalObject::Collision(GraphicalObject* obj)
 	{
 		//collision code written from scratch (no outside sources consulted, so it may have bugs)
