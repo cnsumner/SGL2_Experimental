@@ -746,7 +746,7 @@ public:
      *  \post{An ObjectWindow will be created with the given parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow("Window", 1920, 1080);
-     *  \endcodet
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int width, int height);
 
@@ -769,7 +769,7 @@ public:
      *  \post{An ObjectWindow will be created with the given parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow("Window", 0, 1920, 5, 1085);
-     *  \endcodet
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int min_x, int max_x, 
                  int min_y, int max_y);

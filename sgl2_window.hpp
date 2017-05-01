@@ -768,6 +768,18 @@ public:
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
 	 *               within the viewport
+     *  \pre{The left value must be greater than 0.}
+     *  \pre{The top value must be greater than 0.}
+     *  \pre{The width must be greater than 0.}
+     *  \pre{The height must be greater than 0.}
+     *  \pre{The min_x must be greater than 0.}
+     *  \pre{The min_y must be greater than 0.}
+     *  \pre{The max_x must be greater than min_x.}
+     *  \pre{The max_y must be greater than min_y.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 0, 5, 1920, 1080, 0, 1920, 5, 1085);
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int left, int top, int width, 
                  int height, int min_x, int max_x, 
@@ -778,6 +790,12 @@ public:
      *  @param title the text to appear within the window's titlebar
 	 *  @param width the width in screen coordinates of the window
 	 *  @param height the height in screen coordinates of the window
+     *  \pre{The width must be greater than 0.}
+     *  \pre{The height must be greater than 0.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 1920, 1080);
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int width, int height);
 
@@ -793,29 +811,60 @@ public:
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
 	 *               within the viewport
+     *  \pre{The min_x must be greater than 0.}
+     *  \pre{The min_y must be greater than 0.}
+     *  \pre{The max_x must be greater than min_x.}
+     *  \pre{The max_y must be greater than min_y.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 0, 1920, 5, 1085);
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int min_x, int max_x, 
                  int min_y, int max_y);
 
 	/**
 	 *  Create a default, plain window
+     *  \post{An ObjectWindow will be created with the default parameters.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *  \endcode
 	 */
 	ObjectWindow();
 
 	/**
 	 *  Destroys a graphical window object.
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \post{The object will be deleted.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      delete window;
+     *  \endcode
 	 */
 	virtual ~ObjectWindow();
 
 	/**  
 	 *  Code executed before the call to paint
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      window->pre_paint();
+     *  \endcode
 	 */
 	void pre_paint() override;
 
 	/**
 	 *  Code executed after the call to paint
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      window->post_paint();
+     *  \endcode
 	 */
 	void post_paint() override;
 
@@ -831,6 +880,7 @@ public:
 	 *  @param button the button that was depressed, left (LEFT_BUTTON) 
 	 *         or right (RIGHT_BUTTON) during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	void mouse_pressed(const MouseButtonEvent& ev) override;
 
@@ -846,6 +896,7 @@ public:
 	 *  @param button the button that was released, left (LEFT_BUTTON) 
 	 *         or right (RIGHT_BUTTON) during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	void mouse_released(const MouseButtonEvent& ev) override;
 
@@ -860,6 +911,7 @@ public:
 	 *           location of the mouse pointer within the window during
 	 *           the most recent mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	void mouse_moved(const MouseMotionEvent& ev) override;
 
@@ -889,6 +941,7 @@ public:
 	 *  @param y the y coordinate in viewport coordinates of the 
 	 *           location of the mouse pointer within the window
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	void key_pressed(const KeyboardEvent& ev) override;
 
@@ -896,6 +949,15 @@ public:
 	 *  Adds a graphical object to the window.
 	 *  @param obj the graphical object to add to this window
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The object being passed in must be initialized to a non-null value.}
+     *  \post{The object will be added to the given window.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *  \endcode
 	 */
 	void add(GraphicalObject *obj);
 
@@ -903,6 +965,16 @@ public:
 	 *  Removes a graphical object from the window.
 	 *  @param obj the graphical object to remove from the window.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The object being passed in must be initialized to a non-null value.}
+     *  \post{The object will be removed from the given window.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *      window->remove(obj0);
+     *  \endcode
 	 */
     void remove(GraphicalObject *obj);
 
@@ -911,6 +983,15 @@ public:
 	 *  contained graphical objects.  Frees up the memory 
 	 *  allocated for the object.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \post{All objects in the given window will be removed.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *      window->remove_all();
+     *  \endcode
 	 */
 	void remove_all();
 
@@ -926,6 +1007,16 @@ public:
 	 *          that intersects the given position within the 
 	 *          viewport.  Returns null if no contained graphical
 	 *          object intersects the given point
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      bool hit = window->hit(100, 300);
+     *      // hit will be true
+     *
+     *      bool hit = window->hit(100, 4);
+     *      // hit will be false
+     *  \endcode
 	 */
     GraphicalObject *hit(int x, int y) const;
 
@@ -934,6 +1025,12 @@ public:
      *  graphical objects this window contains.
      *  @return  an iterator to the begining of the vector of 
      *           graphical objects this window contains.
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      std::vector<GraphicalObject *>::iterator ittr = window->begin();
+     *  \endcode
      */
     std::vector<GraphicalObject *>::iterator begin();
 
@@ -942,6 +1039,12 @@ public:
      *  graphical objects this window contains.
      *  @return  an iterator just past the end of the vector of 
      *           graphical objects this window contains.
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      std::vector<GraphicalObject *>::iterator ittr = window->end();
+     *  \endcode
      */
     std::vector<GraphicalObject *>::iterator end();
 };
