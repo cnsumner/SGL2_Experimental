@@ -95,7 +95,21 @@ namespace sgl2 {
 		void DrawPoint(Color color, int x, int y);
 
 		//TODO: add docs
+		void DrawPoint(int x, int y);
+
+		//TODO: add docs
 		void DrawRectangle(Color color, const SDL_Rect& rect);
+
+		//TODO: add docs
+		void DrawFilledRectangle(Color color, const SDL_Rect& rect);
+
+		void EightOcts(int edge_x, int edge_y, int center_x, int center_y);
+
+		//TODO: add docs
+		void DrawCircle(Color, int x, int y, int radius);
+
+		//TODO: add docs
+		void DrawFilledCircle(Color color, int x, int y, int radius);
 
 		//TODO: add docs
 		virtual void Update();
@@ -119,6 +133,7 @@ namespace sgl2 {
 		ObjectWindow* window_;
 		SDL_Rect rect_;
 		Color color_;
+		bool filled_;
 
 	public:
 		/* Unique identifier for object */
@@ -126,6 +141,9 @@ namespace sgl2 {
 
 		//TODO: add docs
 		GraphicalObject(ObjectWindow* window, Color color);
+
+		//TODO: add docs
+		GraphicalObject(ObjectWindow* window, Color color, bool filled);
 
 		//TODO: add docs
 		GraphicalObject(ObjectWindow* window, Color color, int x, int y);
@@ -158,6 +176,9 @@ namespace sgl2 {
 		void SetHeight(int height);
 
 		//TODO: add docs
+		void SetFilled(bool filled);
+
+		//TODO: add docs
 		bool Hit(int x, int y);
 
 		//TODO: add docs
@@ -173,7 +194,7 @@ namespace sgl2 {
 		Point(ObjectWindow* window, Color color, int x, int y);
 
 		//TODO: add docs
-		void Paint();
+		void Paint() override;
 	};
 
 	class Rectangle : public GraphicalObject {
@@ -183,7 +204,26 @@ namespace sgl2 {
 			int height);
 
 		//TODO: add docs
-		void Paint();
+		Rectangle(ObjectWindow* window, Color color, int x, int y, int width,
+			int height, bool filled);
+
+		//TODO: add docs
+		void Paint() override;
+	};
+
+	class Circle : public GraphicalObject {
+	public:
+		//TODO: add docs
+		Circle(ObjectWindow* window, Color color, int x, int y, int radius);
+
+		//TODO: add docs
+		Circle(ObjectWindow* window, Color color, int x, int y, int radius, bool filled);
+
+		//TODO: add docs
+		void SetRadius(int radius);
+
+		//TODO: add docs
+		void Paint() override;
 	};
 
 	class ObjectWindow : public Window {

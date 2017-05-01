@@ -53,10 +53,79 @@ namespace sgl2 {
 		SDL_RenderDrawPoint(renderer_, x, y);
 	}
 
+	void Window::DrawPoint(int x, int y) {
+		SDL_RenderDrawPoint(renderer_, x, y);
+	}
+
 	void Window::DrawRectangle(Color color, const SDL_Rect& rect) {
 		SDL_SetRenderDrawColor(renderer_, color.red, color.green, color.blue,
 			color.alpha);
 		SDL_RenderDrawRect(renderer_, &rect);
+	}
+
+	void Window::DrawFilledRectangle(Color color, const SDL_Rect & rect) {
+		SDL_SetRenderDrawColor(renderer_, color.red, color.green, color.blue,
+			color.alpha);
+		SDL_RenderFillRect(renderer_, &rect);
+	}
+
+	// Draws eight points on the rim of a circle reflected from
+	// one point across eight octants.
+	// (edge_x, edge_y) is a point on the rim.
+	// (center_x, center_y) is the circle's center.
+	// Adapted from 
+	// Computer Graphics: The Principles behind the Art and Science
+	// Cornel Pokorny and Curtis Gerald (c) 1989
+	inline void Window::EightOcts(int edge_x, int edge_y,
+		int center_x, int center_y) {
+		DrawPoint(edge_x + center_x, edge_y + center_y);
+		DrawPoint(-edge_x + center_x, edge_y + center_y);
+		DrawPoint(edge_x + center_x, -edge_y + center_y);
+		DrawPoint(-edge_x + center_x, -edge_y + center_y);
+		DrawPoint(edge_y + center_x, edge_x + center_y);
+		DrawPoint(-edge_y + center_x, edge_x + center_y);
+		DrawPoint(edge_y + center_x, -edge_x + center_y);
+		DrawPoint(-edge_y + center_x, -edge_x + center_y);
+	}
+
+	void Window::DrawCircle(Color color, int x, int y, int radius) {
+		SDL_SetRenderDrawColor(renderer_, color.red, color.green, color.blue,
+			color.alpha);
+
+		// Implements Bresenham's circle generation algorithm to draw
+		// the an arc on a circle from 90 degrees to 45 degrees.  Calls
+		// eight_octs function to render the complete circle.
+		// (x, y) is the circle's center.
+		// radius is the circle's radius.
+		// Adapted from 
+		// Computer Graphics: The Principles behind the Art and Science
+		// Cornel Pokorny and Curtis Gerald (c) 1989
+
+		// Start at 90 degrees
+		int current_x = 0, current_y = radius, s = 3 - 2 * radius;
+		while (current_x < current_y) {  // Stop at 45 degrees
+			EightOcts(current_x, current_y, x, y);
+			if (s <= 0)
+				s = s + 4 * current_x + 6;
+			else {
+				s = s + 4 * (current_x - current_y) + 10;
+				current_y--;
+			}
+			current_x++;
+		}
+		if (current_x == current_y)
+			EightOcts(current_x, current_y, x, y);
+	}
+
+	// Adapted from 
+	// http://stackoverflow.com/questions/1201200/fast-algorithm-for-drawing-filled-circles 
+	void Window::DrawFilledCircle(Color color, int x, int y, int radius) {
+		SDL_SetRenderDrawColor(renderer_, color.red, color.green, color.blue,
+			color.alpha);
+		for (int edge_y = -radius; edge_y <= radius; edge_y++)
+			for (int edge_x = -radius; edge_x <= radius; edge_x++)
+				if (edge_x*edge_x + edge_y*edge_y <= radius*radius)
+					DrawPoint(x + edge_x, y + edge_y);
 	}
 
 	void Window::Update() {}
@@ -130,13 +199,18 @@ namespace sgl2 {
 	//------------------------------------------------------//
 
 	GraphicalObject::GraphicalObject(ObjectWindow* window, Color color)
-		: window_(window), color_(color), id_(id_source_++) {
+		: window_(window), color_(color), filled_(false), id_(id_source_++) {
+		rect_ = SDL_Rect{ 0, 0, 0, 0 };
+	}
+
+	GraphicalObject::GraphicalObject(ObjectWindow* window, Color color, bool filled)
+		: window_(window), color_(color), filled_(filled), id_(id_source_++) {
 		rect_ = SDL_Rect{ 0, 0, 0, 0 };
 	}
 
 	GraphicalObject::GraphicalObject(ObjectWindow* window, Color color, int x,
 		int y)
-		: window_(window), color_(color), id_(id_source_++) {
+		: window_(window), color_(color), filled_(false), id_(id_source_++) {
 		rect_ = SDL_Rect{ x, y, 0, 0 };
 	}
 
@@ -168,16 +242,28 @@ namespace sgl2 {
 		rect_.h = height;
 	}
 
+	void GraphicalObject::SetFilled(bool filled)
+	{
+		filled_ = filled;
+	}
+
 	bool GraphicalObject::Hit(int x, int y)
 	{
-		//TODO: check if coords are in bounds
-		return true;
+		if (x >= rect_.x &&
+			x <= rect_.x + rect_.w &&
+			y >= rect_.y &&
+			y <= rect_.y + rect_.h)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	//TODO: add docs
-	//collision code written from scratch (no outside sources consulted, so it may have a bug)
 	bool GraphicalObject::Collision(GraphicalObject* obj)
 	{
+		//collision code written from scratch (no outside sources consulted, so it may have bugs)
 		GraphicalObject* rect1 = this;
 		GraphicalObject* rect2 = obj;
 
@@ -219,13 +305,65 @@ namespace sgl2 {
 	Rectangle::Rectangle(ObjectWindow* window, Color color, int x, int y, int width,
 		int height)
 		: GraphicalObject(window, color) {
-		rect_ = SDL_Rect{ x, y, width, height };
+		rect_.x = x;
+		rect_.y = y;
+		rect_.w = width;
+		rect_.h = height;
+	}
+
+	Rectangle::Rectangle(ObjectWindow * window, Color color, int x, int y, int width, int height, bool filled) : GraphicalObject(window, color, filled)
+	{
+		rect_.x = x;
+		rect_.y = y;
+		rect_.w = width;
+		rect_.h = height;
 	}
 
 	void Rectangle::Paint() {
-		window_->DrawRectangle(color_, rect_);
+		if (filled_)
+			window_->DrawFilledRectangle(color_, rect_);
+		else
+			window_->DrawRectangle(color_, rect_);
 	}
 
+
+	//------------------------------------------------------//
+	//------------------------------------------------------//
+	//------------------------------------------------------//
+
+	//--------------CIRCLE CLASS----------------------------//
+	//------------------------------------------------------//
+	//------------------------------------------------------//
+	//------------------------------------------------------//
+
+	Circle::Circle(ObjectWindow* window, Color color, int x, int y, int radius) : GraphicalObject(window, color, x, y)
+	{
+		rect_.w = radius * 2;
+		rect_.h = radius * 2;
+	}
+
+	Circle::Circle(ObjectWindow * window, Color color, int x, int y, int radius, bool filled) : GraphicalObject(window, color, filled)
+	{
+		rect_.x = x;
+		rect_.y = y;
+		rect_.w = radius * 2;
+		rect_.h = radius * 2;
+	}
+
+	void Circle::SetRadius(int radius)
+	{
+		rect_.w = radius * 2;
+		rect_.h = radius * 2;
+	}
+
+	void Circle::Paint()
+	{
+		int radius = rect_.w / 2;
+		if (filled_)
+			window_->DrawFilledCircle(color_, rect_.x + radius, rect_.y + radius, radius);
+		else
+			window_->DrawCircle(color_, rect_.x + radius, rect_.y + radius, radius);
+	}
 
 	//------------------------------------------------------//
 	//------------------------------------------------------//
