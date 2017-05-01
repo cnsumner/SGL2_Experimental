@@ -678,6 +678,9 @@ public:
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
 	 *               within the viewport
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 0, 5, 1920, 1080, 0, 1920, 5, 1085);
+     *  \endcode
 	 */
 	ObjectWindow(const std::string& title, int left, int top, int width, 
                  int height, int min_x, int max_x, 
@@ -688,6 +691,9 @@ public:
      *  @param title the text to appear within the window's titlebar
 	 *  @param width the width in screen coordinates of the window
 	 *  @param height the height in screen coordinates of the window
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 1920, 1080);
+     *  \endcodet
 	 */
 	ObjectWindow(const std::string& title, int width, int height);
 
@@ -702,30 +708,51 @@ public:
 	 *  @param min_y the smallest y value representing the top-most position
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
-	 *               within the viewport
+	 *               within the viewpor
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow("Window", 0, 1920, 5, 1085);
+     *  \endcodet
 	 */
 	ObjectWindow(const std::string& title, int min_x, int max_x, 
                  int min_y, int max_y);
 
 	/**
 	 *  Create a default, plain window
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *  \endcode
 	 */
 	ObjectWindow();
 
 	/**
 	 *  Destroys a graphical window object.
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      delete window;
+     *  \endcode
 	 */
 	virtual ~ObjectWindow();
 
 	/**  
 	 *  Code executed before the call to paint
 	 *  @return nothing
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      window->pre_paint();
+     *  \endcode
 	 */
 	void pre_paint() override;
 
 	/**
 	 *  Code executed after the call to paint
 	 *  @return nothing
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      window->post_paint();
+     *  \endcode
 	 */
 	void post_paint() override;
 
@@ -806,6 +833,12 @@ public:
 	 *  Adds a graphical object to the window.
 	 *  @param obj the graphical object to add to this window
 	 *  @return nothing
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *  \endcode
 	 */
 	void add(GraphicalObject *obj);
 
@@ -813,6 +846,13 @@ public:
 	 *  Removes a graphical object from the window.
 	 *  @param obj the graphical object to remove from the window.
 	 *  @return nothing
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *      window->remove(obj0);
+     *  \endcode
 	 */
     void remove(GraphicalObject *obj);
 
@@ -821,6 +861,13 @@ public:
 	 *  contained graphical objects.  Frees up the memory 
 	 *  allocated for the object.
 	 *  @return nothing
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      window->add(obj0);
+     *      window->remove_all();
+     *  \endcode
 	 */
 	void remove_all();
 
@@ -836,6 +883,15 @@ public:
 	 *          that intersects the given position within the 
 	 *          viewport.  Returns null if no contained graphical
 	 *          object intersects the given point
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      bool hit = window->hit(100, 300);
+     *      // hit will be true
+     *
+     *      bool hit = window->hit(100, 4);
+     *      // hit will be false
+     *  \endcode
 	 */
     GraphicalObject *hit(int x, int y) const;
 
@@ -844,6 +900,11 @@ public:
      *  graphical objects this window contains.
      *  @return  an iterator to the begining of the vector of 
      *           graphical objects this window contains.
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      std::vector<GraphicalObject *>::iterator ittr = window->begin();
+     *  \endcode
      */
     std::vector<GraphicalObject *>::iterator begin();
 
@@ -852,6 +913,11 @@ public:
      *  graphical objects this window contains.
      *  @return  an iterator just past the end of the vector of 
      *           graphical objects this window contains.
+     *  \code{.cpp}
+     *      ObjectWindow *window = new ObjectWindow();
+     *
+     *      std::vector<GraphicalObject *>::iterator ittr = window->end();
+     *  \endcode
      */
     std::vector<GraphicalObject *>::iterator end();
 };
