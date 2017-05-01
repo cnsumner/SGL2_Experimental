@@ -12,135 +12,209 @@ using std::vector;
 
 namespace sgl2 {
 
-using KeyboardEvent = SDL_KeyboardEvent;
+	using KeyboardEvent = SDL_KeyboardEvent;
+	using MouseMotionEvent = SDL_MouseMotionEvent;
+	using MouseButtonEvent = SDL_MouseButtonEvent;
+	using WindowEvent = SDL_WindowEvent;
 
-class Color {
-   public:
-    Uint8 red;
-    Uint8 green;
-    Uint8 blue;
-    Uint8 alpha;
+	class Color {
+	public:
+		Uint8 red;
+		Uint8 green;
+		Uint8 blue;
+		Uint8 alpha;
 
-    /** Initializes a Color object.  The constructor
-    *   enforces clamped RGB values (0...255).
-    *   @param r the red component of the color
-    *   @param g the green component of the color
-    *   @param b the blue component of the color
-    *   @param a the alpha channel of the color
-    */
-    Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-};
+		/** Initializes a Color object.  The constructor
+		*   enforces clamped RGB values (0...255).
+		*   @param r the red component of the color
+		*   @param g the green component of the color
+		*   @param b the blue component of the color
+		*   @param a the alpha channel of the color
+		*/
+		Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+	};
 
-class Window {
-   protected:
-    SDL_Window* window_;
-    SDL_Renderer* renderer_;
-    Color background_color_;
-    bool invalid_;  // calling this invalid to match up with what most graphics
-                    // libraries call it
+	class Window {
+	protected:
+		SDL_Window* window_;
+		SDL_Renderer* renderer_;
+		Color background_color_;
+		bool invalid_;  // calling this invalid to match up with what most graphics libraries call it
+		bool running_;
 
-   public:
-    /** Basic Window constructor.
-    *   Creates a basic window with title, dimensions, and background color.
-    *
-    */
-    Window(const string& title, int width, int height, const Color& background);
+	public:
+		/*!
+		Creates a window with title, dimensions, and background color.
+		*/
+		Window(const string& title, int width, int height, const Color& background);
 
-    /** Basic Window constructor.
-    *	Creates a basic window with title, origin, dimensions, and background
-    *color.
-    *
-    */
-    Window(const string& title, int x, int y, int width, int height,
-           const Color& background);
+		/*!
+		Sets the background color of the window.
+		*/
+		void SetBackgroundColor(const Color& color);
 
-    void SetColor(const Color& color);
+		/*!
+		Key press event handler. Override this to handle key presses.
+		@param key 
+		*/
+		virtual void KeyPressed(const KeyboardEvent & event);
 
-    /**	Key press event handler.
-    *	Override this to handle key presses.
-    */
-    virtual void KeyPressed(KeyboardEvent& key);
+		//TODO: add docs
+		virtual void MouseMoved(const MouseMotionEvent & event);
 
-    virtual void PrePaint();
+		//TODO: add docs
+		virtual void MousePressed(const MouseButtonEvent& event);
 
-    virtual void Paint() = 0;
+		//TODO: add docs
+		virtual void MouseReleased(const MouseButtonEvent& event);
 
-    virtual void PostPaint();
+		//TODO: add docs
+		virtual void MouseEntered();
 
-    void PaintAll();
+		//TODO: add docs
+		virtual void MouseExited();
 
-    void Repaint();
+		//TODO: add docs
+		virtual void PrePaint();
 
-    void DrawPoint(Color color, int x, int y);
+		/*!
+		Must override. Handles drawing objects, called when the window needs to be repainted.
+		*/
+		virtual void Paint() = 0;
 
-    void DrawRectangle(Color color, const SDL_Rect& rect);
+		//TODO: add docs
+		virtual void PostPaint();
 
-    /** Main loop.
-    *	Runs the main loop, which handles rendering, events, etc.
-    */
-    void Run();
-};
+		//TODO: add docs
+		void PaintAll();
 
-/** forward declaration */
-class ObjectWindow;
+		//TODO: add docs
+		void Repaint();
 
-class GraphicalObject {
-   protected:
-    ObjectWindow* window_;
-    int posx_;
-    int posy_;
-    Color color_;
+		//TODO: add docs
+		void DrawPoint(Color color, int x, int y);
 
-   public:
-    /** Unique identifier for object */
-    const unsigned id_;
-    GraphicalObject(ObjectWindow* window, Color color);
-    GraphicalObject(ObjectWindow* window, Color color, int x, int y);
-    virtual void Paint() = 0;
-    virtual int GetPosX();
-    virtual int GetPosY();
-    virtual void SetPosX(int x);
-    virtual void SetPosY(int y);
+		//TODO: add docs
+		void DrawRectangle(Color color, const SDL_Rect& rect);
 
-   private:
-    static unsigned id_source_;
-};
+		//TODO: add docs
+		virtual void Update();
 
-class Point : public GraphicalObject {
-   public:
-    Point(ObjectWindow* window, Color color, int x, int y);
-    void Paint();
-};
+		/*!
+		Runs the main loop, which handles rendering, events, and updates.
+		*/
+		void Run();
 
-class Rectangle : public GraphicalObject {
-   public:
-    Rectangle(ObjectWindow* window, Color color, int x, int y, int width,
-              int height);
-    void Paint();
-    int GetPosX();
-    int GetPosY();
-    void SetPosX(int x);
-    void SetPosY(int y);
+		/*!
+		Closes the window.
+		*/
+		void Quit();
+	};
 
-   private:
-    SDL_Rect rect_;
+	/* forward declaration */
+	class ObjectWindow;
 
-};
+	class GraphicalObject {
+	protected:
+		ObjectWindow* window_;
+		SDL_Rect rect_;
+		Color color_;
 
-class ObjectWindow : public Window {
-   protected:
-    vector<GraphicalObject*> objects_;
+	public:
+		/* Unique identifier for object */
+		const unsigned id_;
 
-   public:
-    ObjectWindow(const string& title, int width, int height,
-                 const Color& background);
+		//TODO: add docs
+		GraphicalObject(ObjectWindow* window, Color color);
 
-    void PrePaint() override;
-    void Paint() override;
-    void PostPaint() override;
+		//TODO: add docs
+		GraphicalObject(ObjectWindow* window, Color color, int x, int y);
 
-    void Add(GraphicalObject* obj);
-};
+		//TODO: add docs
+		virtual void Paint() = 0;
+
+		//TODO: add docs
+		int GetPosX();
+
+		//TODO: add docs
+		int GetPosY();
+
+		//TODO: add docs
+		void SetPosX(int x);
+
+		//TODO: add docs
+		void SetPosY(int y);
+
+		//TODO: add docs
+		int GetWidth();
+
+		//TODO: add docs
+		int GetHeight();
+
+		//TODO: add docs
+		void SetWidth(int width);
+
+		//TODO: add docs
+		void SetHeight(int height);
+
+		//TODO: add docs
+		bool Hit(int x, int y);
+
+		//TODO: add docs
+		bool Collision(GraphicalObject* obj);
+
+	private:
+		static unsigned id_source_;
+	};
+
+	class Point : public GraphicalObject {
+	public:
+		//TODO: add docs
+		Point(ObjectWindow* window, Color color, int x, int y);
+
+		//TODO: add docs
+		void Paint();
+	};
+
+	class Rectangle : public GraphicalObject {
+	public:
+		//TODO: add docs
+		Rectangle(ObjectWindow* window, Color color, int x, int y, int width,
+			int height);
+
+		//TODO: add docs
+		void Paint();
+	};
+
+	class ObjectWindow : public Window {
+	protected:
+		vector<GraphicalObject*> objects_;
+
+	public:
+		//TODO: add docs
+		ObjectWindow(const string& title, int width, int height,
+			const Color& background);
+
+		//TODO: add docs
+		void PrePaint() override;
+		
+		//TODO: add docs
+		void Paint() override;
+		
+		//TODO: add docs
+		void PostPaint() override;
+
+		//TODO: add docs
+		void Add(GraphicalObject* obj);
+
+		//TODO: add docs
+		void Remove(GraphicalObject* obj);
+
+		/*!
+		Returns a pointer to the first GraphicalObject found that intersects with the point (x, y). Returns nullptr if no object found. 
+		*/
+		GraphicalObject* GetFirstHit(int x, int y);
+	};
 }
 
 #undef main
