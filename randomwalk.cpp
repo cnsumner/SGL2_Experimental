@@ -8,7 +8,9 @@
 using namespace sgl2;
 using namespace std;
 
-
+/**
+ * A struct to hold the parameters to draw a circle on a window.
+ */
 struct Circle {
     Window *win;  // The window containing this circle
     double x;     // The location of the circle's center:
