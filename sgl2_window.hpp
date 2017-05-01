@@ -382,6 +382,14 @@ public:
 	 *                object's bounding box
 	 *   @param height the height in viewport coordinates of the graphical 
 	 *                object's bounding box
+     *   \pre{The left value must be greater than 0.}
+     *   \pre{The top value must be greater than 0.}
+     *   \pre{The width must be greater than 0.}
+     *   \pre{The height must be greater than 0.}
+     *   \post{A GraphicalObject will be created with the given parameters.}
+     *   \code{.cpp}
+     *      GraphicalObject *obj = new GraphicalObject(0, 0, 1920, 1080);
+     *   \endcode
 	 */
     GraphicalObject(int left, int top, int width, 
                     int height);
@@ -391,7 +399,15 @@ public:
 	 *   containing window but has a unique id.  The pre-existing 
 	 *   graphical object is not affected by the copy.
 	 *   @param other the graphical object from which this new graphical
-	 *   object is being created.  	 */
+	 *   object is being created.
+     *   \pre{The object the method is being called on must be initialized to a non-null value.}
+     *   \post{A GraphicalObject will be created with the given parameters.}
+     *   \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
+     *
+     *      GraphicalObject *obj1 = new GraphicalObject(obj0);
+     *   \endcode  	 
+     */
     GraphicalObject(const GraphicalObject& other);
 
 	/**  Assignment copies the location, size, and window container from 
@@ -402,11 +418,24 @@ public:
 	 *   object is being assigned.
 	 *   @return a reference to this graphical object as per standard
 	 *           assignment operator sementics
+     *   \post{A GraphicalObject will be assigned from the given parameters.}
+     *   \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
+     *
+     *      GraphicalObject obj1 = *obj0;
+     *   \endcode
 	 */
     GraphicalObject& operator=(const GraphicalObject& other);
 
 	/**
 	 *  Destroys a graphical object.
+     *  \pre{The declared object must be non-null or previously deleted.}
+     *  \post{A GraphicalObject will be created with the given default parameters.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
+     *
+     *      delete obj0;
+     *  \endcode
 	 */
     virtual ~GraphicalObject();
 
@@ -416,6 +445,13 @@ public:
 	 *  in the viewport coordinate system.
 	 *  @return the x coordinate of the graphical object's
 	 *          left-top corner
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      int left = obj0->get_left();
+     *      // left should be 0;
+     *  \endcode
 	 */
 	virtual int get_left() const;
 
@@ -425,6 +461,13 @@ public:
 	 *  in the viewport coordinate system.
 	 *  @return the y coordinate of the graphical object's
 	 *          left-top corner
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      int top = obj0->get_top();
+     *      // top should be 5;
+     *  \endcode
 	 */
 	virtual int get_top() const;
 
@@ -432,6 +475,13 @@ public:
 	 *  Returns the width in viewport coordinates of the 
 	 *  graphical object's bounding box.
 	 *  @return the width of the graphical object
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      int width = obj0->get_width();
+     *      // width should be 1920;
+     *  \endcode
 	 */
 	virtual int get_width() const;
 
@@ -439,6 +489,13 @@ public:
 	 *  Returns the height in viewport coordinates of the 
 	 *  graphical object's bounding box.
 	 *  @return the height of the graphical object
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      int height = obj0->get_height();
+     *      // height should be 1080;
+     *  \endcode
 	 */
 	virtual int get_height() const;
 
@@ -452,6 +509,17 @@ public:
 	 *  @width the graphical object's width in viewport coordinates.
 	 *  @height the graphical object's height in viewport coordinates.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The left value must be greater than 0.}
+     *  \pre{The top value must be greater than 0.}
+     *  \pre{The width must be greater than 0.}
+     *  \pre{The height must be greater than 0.}
+     *  \post{The object will be set to the given x and y coordinate with the given width and height.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      obj0->set(50, 80, 1080, 720);
+     *  \endcode
 	 */
 	virtual void set(int x, int y, int width, int height);
 
@@ -462,6 +530,12 @@ public:
 	 *  This method is abstract, so concrete derived classes must
      *  provide a concrete implementation.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      obj0->paint();
+     *  \endcode
 	 */
     virtual void paint() const = 0;
 
@@ -477,6 +551,15 @@ public:
 	 *               of the left-top corner of the
 	 *               graphical object's bounding box
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The left value must be greater than 0.}
+     *  \pre{The top value must be greater than 0.}
+     *  \post{The object will be moved to the given x and y coordinates.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      obj0->move_to(50, 80);
+     *  \endcode
 	 */  
     virtual void move_to(int left, int top);
 
@@ -491,6 +574,7 @@ public:
 	 *  @param button the button that was depressed, left (LEFT_BUTTON) 
 	 *         or right (RIGHT_BUTTON) during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	virtual void mouse_pressed(const MouseButtonEvent& ev);
 
@@ -505,6 +589,7 @@ public:
 	 *  @param button the button that was depressed, left (LEFT_BUTTON) 
 	 *         or right (RIGHT_BUTTON) during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	virtual void mouse_released(const MouseButtonEvent& ev);
 
@@ -517,6 +602,7 @@ public:
 	 *  @param y the y coordinate in viewport coordinates of the mouse
 	 *           pointer location during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	virtual void mouse_moved(const MouseMotionEvent& ev);
 
@@ -535,6 +621,7 @@ public:
 	 *  @param y the y coordinate in viewport coordinates of the mouse
 	 *           pointer location during the current mouse event.
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	virtual void mouse_dragged(const MouseMotionEvent& ev);
 
@@ -550,6 +637,7 @@ public:
 	 *  @param y the y coordinate in viewport coordinates of the 
 	 *           location of the mouse pointer within the window
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
 	 */
 	virtual void key_pressed(const KeyboardEvent& key);
 
@@ -564,6 +652,16 @@ public:
 	 *           location to check
 	 *  @return true, if (x,y) intersects the bounding box of the graphical
 	 *          object; otherwise it returns false
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      
+     *      bool hit = obj0->hit(1000, 80);
+     *      // hit will be true
+     *
+     *      hit = obj0->hit(2, 4);
+     *      // hit will be false
+     *  \endcode
 	 */
     virtual bool hit(int x, int y);
 
@@ -572,6 +670,15 @@ public:
 	 *  @param win a pointer to the window to make the containing 
 	 *             window for this graphical object.
 	 *  @return a pointer to the previous owner of this window
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The window to be set to the object must be initialized to a non-null value.}
+     *  \post{The objects containing window will be set to the window passed in.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *      ObjectWindow *window = ObjectWindow("Window", 200, 300, 1080, 720, 200, 1280, 300, 1020);
+     *      
+     *      obj0->set_window(window);
+     *  \endcode
 	 */
 	virtual Window *set_window(ObjectWindow *win);
 
@@ -579,6 +686,12 @@ public:
 	 *  Get the containing window of this graphical object.
 	 *  @return a pointer to the window that contains this 
 	 *          graphical object.
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      ObjectWindow *window = obj0->get_window();
+     *  \endcode
 	 */
 	virtual Window *get_window() const;
 
@@ -587,6 +700,17 @@ public:
      *  @param flag if true, activates the object; otherwise,
                     deactivates the object
 	 *  @return nothing
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \post{The object will be activated or deactivated, depending on the input.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      // activate the object
+     *      obj0->set_mouse_over(true);
+     *
+     *      // deactivate the object
+     *      obj0->set_mouse_over(false);
+     *  \endcode
 	 */
 	virtual void set_mouse_over(bool flag);
 
@@ -594,6 +718,9 @@ public:
      *  Sets the graphical object's cursor shape.
      *  @param cursor the object's cursor shape
      *  @return the previous cursor shape
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The cursor must be an initialized to a non-null value.}
+     *  \post{The object's cursor will be set to the given shape.}
      */
     virtual CursorShape set_cursor(CursorShape cursor);
 
@@ -602,6 +729,12 @@ public:
      *  object. 
      *  @return the cursor shape associated with this graphical
      *          object
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \code{.cpp}
+     *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
+     *
+     *      CursorShape shape = obj0->get_cursor();
+     *  \endcode
      */
     virtual CursorShape get_cursor();
 };
