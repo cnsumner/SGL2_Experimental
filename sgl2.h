@@ -337,6 +337,7 @@ public:
      *   \pre{The top value must be greater than 0.}
      *   \pre{The width must be greater than 0.}
      *   \pre{The height must be greater than 0.}
+     *   \post{A GraphicalObject will be created with the given parameters.}
      *   \code{.cpp}
      *      GraphicalObject *obj = new GraphicalObject(0, 0, 1920, 1080);
      *   \endcode
@@ -350,7 +351,8 @@ public:
 	 *   graphical object is not affected by the copy.
 	 *   @param other the graphical object from which this new graphical
 	 *   object is being created.  	 
-     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *   \pre{The object the method is being called on must be initialized to a non-null value.}
+     *   \post{A GraphicalObject will be created with the given parameters.}
      *   \code{.cpp}
      *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
      *
@@ -367,6 +369,7 @@ public:
 	 *   object is being assigned.
 	 *   @return a reference to this graphical object as per standard
 	 *           assignment operator sementics
+     *   \post{A GraphicalObject will be assigned from the given parameters.}
      *   \code{.cpp}
      *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
      *
@@ -378,6 +381,7 @@ public:
 	/**
 	 *  Destroys a graphical object.
      *  \pre{The declared object must be non-null or previously deleted.}
+     *  \post{A GraphicalObject will be created with the given default parameters.}
      *  \code{.cpp}
      *      GraphicalObject *obj0 = new GraphicalObject(0, 0, 1920, 1080);
      *
@@ -715,6 +719,15 @@ public:
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
 	 *               within the viewport
+     *  \pre{The left value must be greater than 0.}
+     *  \pre{The top value must be greater than 0.}
+     *  \pre{The width must be greater than 0.}
+     *  \pre{The height must be greater than 0.}
+     *  \pre{The min_x must be greater than 0.}
+     *  \pre{The min_y must be greater than 0.}
+     *  \pre{The max_x must be greater than min_x.}
+     *  \pre{The max_y must be greater than min_y.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow("Window", 0, 5, 1920, 1080, 0, 1920, 5, 1085);
      *  \endcode
@@ -728,6 +741,9 @@ public:
      *  @param title the text to appear within the window's titlebar
 	 *  @param width the width in screen coordinates of the window
 	 *  @param height the height in screen coordinates of the window
+     *  \pre{The width must be greater than 0.}
+     *  \pre{The height must be greater than 0.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow("Window", 1920, 1080);
      *  \endcodet
@@ -745,7 +761,12 @@ public:
 	 *  @param min_y the smallest y value representing the top-most position
 	 *               within the viewport
 	 *  @param max_y the largest y value representing the top-most position
-	 *               within the viewpor
+	 *               within the viewport
+     *  \pre{The min_x must be greater than 0.}
+     *  \pre{The min_y must be greater than 0.}
+     *  \pre{The max_x must be greater than min_x.}
+     *  \pre{The max_y must be greater than min_y.}
+     *  \post{An ObjectWindow will be created with the given parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow("Window", 0, 1920, 5, 1085);
      *  \endcodet
@@ -755,6 +776,7 @@ public:
 
 	/**
 	 *  Create a default, plain window
+     *  \post{An ObjectWindow will be created with the default parameters.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow();
      *  \endcode
@@ -763,6 +785,8 @@ public:
 
 	/**
 	 *  Destroys a graphical window object.
+     *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \post{The object will be deleted.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow();
      *
@@ -877,6 +901,8 @@ public:
 	 *  @param obj the graphical object to add to this window
 	 *  @return nothing
      *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The object being passed in must be initialized to a non-null value.}
+     *  \post{The object will be added to the given window.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow();
      *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
@@ -891,6 +917,8 @@ public:
 	 *  @param obj the graphical object to remove from the window.
 	 *  @return nothing
      *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \pre{The object being passed in must be initialized to a non-null value.}
+     *  \post{The object will be removed from the given window.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow();
      *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
@@ -907,6 +935,7 @@ public:
 	 *  allocated for the object.
 	 *  @return nothing
      *  \pre{The object the method is being called on must be initialized to a non-null value.}
+     *  \post{All objects in the given window will be removed.}
      *  \code{.cpp}
      *      ObjectWindow *window = new ObjectWindow();
      *      GraphicalObject *obj0 = new GraphicalObject(0, 5, 1920, 1080);
